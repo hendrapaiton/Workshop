@@ -1,3 +1,3 @@
 <template>
-    <p>Halo Dunia</p>
+    <p><i class="fa fa-home"></i>Halo Dunia</p>
 </template>
