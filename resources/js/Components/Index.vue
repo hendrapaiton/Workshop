@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import Copyright from './Dashboard/Copyright.vue';
+
+</script>
+
 <template>
-    <p><i class="fa fa-home"></i> Sphinx of black quartz, judge my vow.</p>
+    <Copyright />
 </template>
