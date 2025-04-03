@@ -20,5 +20,9 @@
                 </div>
             </div>
         </nav>
+        <div class="container mx-auto p-4 xl:w-3/4 xl:mt-4 lg:w-3/4 lg:mt-4 md:w-3/4 md:mt-4">
+            <h1 class="text-2xl font-bold mb-1">Welcome to eCommerce Dashboard</h1>
+            <p class="mb-4">Here you can manage your projects, view order stats, and manage your staff and customer.</p>
+        </div>
     </div>
 </template>
