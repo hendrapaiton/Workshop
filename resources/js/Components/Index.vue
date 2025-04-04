@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import Brand from './Dashboard/Brand.vue';
-import Copyright from './Dashboard/Copyright.vue';
+import Brand from './Layout/Brand.vue';
+import Copyright from './Layout/Copyright.vue';
+import Dashboard from './Dashboard/Index.vue';
 
 </script>
 
 <template>
     <Brand />
+    <Dashboard />
     <Copyright />
 </template>
