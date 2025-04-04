@@ -29,26 +29,39 @@ class AuthController extends Controller
         $accessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
         $refreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
 
+        $cookie = cookie(
+            'refresh_token',
+            $refreshToken,
+            $refreshTokenExpiresAt->timestamp,
+            '/',
+            null,
+            false,
+            true,
+            false,
+            'Strict',
+        );
+
         return response()->json([
             'access_token' => $accessToken,
             'access_exp' => $accessTokenExpiresAt,
-            'refresh_token' => $refreshToken,
-            'refresh_exp' => $refreshTokenExpiresAt,
             'token_type' => 'Bearer',
-        ]);
+        ])->withCookie($cookie);
     }
 
     public function refresh(Request $request)
     {
-        $currentRefreshToken = $request->bearerToken();
-        $refreshToken = PersonalAccessToken::findToken($currentRefreshToken);
+        $refreshToken = $request->cookie('refresh_token');
 
-        if (!$refreshToken || !$refreshToken->can('refresh') || $refreshToken->expires_at->isPast()) {
-            return response()->json(['error' => 'Invalid or expired refresh token'], 401);
+        if (!$refreshToken) {
+            return response()->json(['message' => 'Refresh token tidak ditemukan'], 401);
         }
 
-        $user = $refreshToken->tokenable;
-        $refreshToken->delete();
+        $token = PersonalAccessToken::findToken($refreshToken);
+
+        $user = $token->tokenable;
+        Auth::login($user);
+
+        $token->delete();
 
         $accessTokenExpiresAt = Carbon::now()->addDays(1);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
@@ -56,13 +69,23 @@ class AuthController extends Controller
         $newAccessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
         $newRefreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
 
+        $cookie = cookie(
+            'refresh_token',
+            $newRefreshToken,
+            $refreshTokenExpiresAt->timestamp,
+            '/',
+            null,
+            false,
+            true,
+            false,
+            'Strict',
+        );
+
         return response()->json([
             'access_token' => $newAccessToken,
             'access_exp' => $accessTokenExpiresAt,
-            'refresh_token' => $newRefreshToken,
-            'refresh_exp' => $refreshTokenExpiresAt,
             'token_type' => 'Bearer',
-        ]);
+        ])->withCookie($cookie);
     }
 
     public function logout(Request $request)
