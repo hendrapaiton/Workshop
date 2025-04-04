@@ -15,6 +15,11 @@ const routes = [
         name: "login",
         component: () => import("../Components/Login/Index.vue"),
     },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "not-found",
+        component: () => import("../Components/404.vue"),
+    },
 ];
 
 const router = createRouter({
