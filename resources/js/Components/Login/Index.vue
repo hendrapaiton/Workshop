@@ -42,7 +42,6 @@ const password = ref('')
 const message = ref('')
 
 const handleLogin = async () => {
-    console.log('Logging in with:', email.value, password.value)
     try {
         await authStore.login({
             email: email.value,

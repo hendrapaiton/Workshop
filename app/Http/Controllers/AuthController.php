@@ -93,4 +93,26 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
+
+    public function validate(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return response()->json(['message' => 'Access token not found'], 401);
+        }
+
+        $accessToken = PersonalAccessToken::findToken($token);
+
+        if (!$accessToken || $accessToken->expired()) {
+            return response()->json(['message' => 'Invalid or expired token'], 401);
+        }
+
+        $user = $accessToken->tokenable;
+        Auth::login($user);
+
+        return response()->json([
+            'access_token' => $accessToken
+        ], 200);
+    }
 }

@@ -5,19 +5,36 @@ export const useAuthStore = defineStore("auth", {
     state: () => ({
         username: null,
         token: null,
-        isLoggedIn: false,
-        isOwner: false,
-        isStaff: false,
-        isCustomer: false,
+        isInitialized: false,
     }),
     getters: {
-        isAuthenticated: (state) => !!state.token && !!state.username,
+        isAuthenticated: (state) => !!state.token,
     },
     actions: {
+        async initialize() {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    this.clearAuthData();
+                    return;
+                }
+
+                const response = await api.validateToken(token);
+                this.token = response.data.access_token;
+            } catch (error) {
+                try {
+                    const response = await api.refreshToken();
+                    this.token = response.data.access_token;
+                } catch (error) {
+                    this.clearAuthData();
+                }
+            } finally {
+                this.isInitialized = true;
+            }
+        },
         async login(credentials) {
             const response = await api.login(credentials);
             this.token = response.data.access_token;
-            this.isLoggedIn = true;
             localStorage.setItem("token", this.token);
         },
         async logout() {
@@ -27,11 +44,6 @@ export const useAuthStore = defineStore("auth", {
         },
         clearAuthData() {
             this.token = null;
-            this.username = null;
-            this.isLoggedIn = false;
-            this.isOwner = false;
-            this.isStaff = false;
-            this.isCustomer = false;
         },
     },
 });

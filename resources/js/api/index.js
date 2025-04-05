@@ -24,7 +24,7 @@ apiInstance.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             const authStore = useAuthStore();
-            authStore.logout();
+            authStore.setToken(null);
         }
         return Promise.reject(error);
     }
@@ -32,6 +32,7 @@ apiInstance.interceptors.response.use(
 
 export const api = {
     login: (credentials) => apiInstance.post("/login", credentials),
+    validateToken: () => apiInstance.post("/validate"),
     logout: () => apiInstance.post("/logout"),
     refreshToken: () => apiInstance.post("/refresh"),
     getUser: (userId) => apiInstance.get(`/profile/${userId}`),
