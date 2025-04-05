@@ -23,7 +23,7 @@ class AuthController extends Controller
         $user = $request->user();
         $user->tokens()->delete();
 
-        $accessTokenExpiresAt = Carbon::now()->addMinutes(5);
+        $accessTokenExpiresAt = Carbon::now()->addMinutes(15);
         $refreshTokenExpiresAt = Carbon::now()->addDays(1);
 
         $accessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
@@ -63,8 +63,8 @@ class AuthController extends Controller
 
         $token->delete();
 
-        $accessTokenExpiresAt = Carbon::now()->addDays(1);
-        $refreshTokenExpiresAt = Carbon::now()->addDays(7);
+        $accessTokenExpiresAt = Carbon::now()->addMinutes(15);
+        $refreshTokenExpiresAt = Carbon::now()->addDays(1);
 
         $newAccessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
         $newRefreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;

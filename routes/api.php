@@ -4,6 +4,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function() {
+    return response()->json(['platform' => 'Virginia Handmade']);
+});
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh', [AuthController::class, 'refresh']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
