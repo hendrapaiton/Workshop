@@ -42,6 +42,8 @@ class AuthController extends Controller
         );
 
         return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
             'access_token' => $accessToken,
             'access_exp' => $accessTokenExpiresAt,
             'token_type' => 'Bearer',
@@ -82,6 +84,8 @@ class AuthController extends Controller
         );
 
         return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
             'access_token' => $newAccessToken,
             'access_exp' => $accessTokenExpiresAt,
             'token_type' => 'Bearer',
@@ -112,6 +116,8 @@ class AuthController extends Controller
         Auth::login($user);
 
         return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
             'access_token' => $accessToken
         ], 200);
     }
