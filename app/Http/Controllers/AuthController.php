@@ -44,6 +44,7 @@ class AuthController extends Controller
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
+            'roles' => $user->roles,
             'access_token' => $accessToken,
             'access_exp' => $accessTokenExpiresAt,
             'token_type' => 'Bearer',
@@ -86,6 +87,7 @@ class AuthController extends Controller
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
+            'roles' => $user->roles,
             'access_token' => $newAccessToken,
             'access_exp' => $accessTokenExpiresAt,
             'token_type' => 'Bearer',
@@ -118,6 +120,7 @@ class AuthController extends Controller
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
+            'roles' => $user->roles,
             'access_token' => $accessToken
         ], 200);
     }
