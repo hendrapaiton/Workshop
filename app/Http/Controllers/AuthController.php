@@ -62,7 +62,7 @@ class AuthController extends Controller
         $token = PersonalAccessToken::findToken($refreshToken);
 
         $user = $token->tokenable;
-        Auth::login($user);
+        Auth::setUser($user);
 
         $token->delete();
 
@@ -110,18 +110,18 @@ class AuthController extends Controller
 
         $accessToken = PersonalAccessToken::findToken($token);
 
-        if (!$accessToken || $accessToken->expired()) {
+        if (!$accessToken || Carbon::parse($accessToken->created_at)->addMinutes(15)->isPast()) {
             return response()->json(['message' => 'Invalid or expired token'], 401);
         }
 
         $user = $accessToken->tokenable;
-        Auth::login($user);
+        Auth::setUser($user);
 
         return response()->json([
             'name' => $user->name,
             'email' => $user->email,
             'roles' => $user->roles,
-            'access_token' => $accessToken
+            'access_token' => $token,
         ], 200);
     }
 }

@@ -3,7 +3,9 @@ import { api } from "@/api";
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
-        username: null,
+        name: null,
+        email: null,
+        roles: null,
         token: null,
         isInitialized: false,
     }),
@@ -21,10 +23,16 @@ export const useAuthStore = defineStore("auth", {
 
                 const response = await api.validateToken(token);
                 this.token = response.data.access_token;
+                this.name = response.data.name;
+                this.email = response.data.email;
+                this.roles = response.data.roles;
             } catch (error) {
                 try {
                     const response = await api.refreshToken();
                     this.token = response.data.access_token;
+                    this.name = response.data.name;
+                    this.email = response.data.email;
+                    this.roles = response.data.roles;
                 } catch (error) {
                     this.clearAuthData();
                 }
@@ -35,6 +43,9 @@ export const useAuthStore = defineStore("auth", {
         async login(credentials) {
             const response = await api.login(credentials);
             this.token = response.data.access_token;
+            this.name = response.data.name;
+            this.email = response.data.email;
+            this.roles = response.data.roles;
             localStorage.setItem("token", this.token);
         },
         async logout() {
@@ -44,6 +55,10 @@ export const useAuthStore = defineStore("auth", {
         },
         clearAuthData() {
             this.token = null;
+            this.name = null;
+            this.email = null;
+            this.roles = null;
+            this.isInitialized = false;
         },
     },
 });
